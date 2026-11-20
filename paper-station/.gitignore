@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.pyc
+*.sqlite3*
+*.db
+*.lock
+*.log
+logs/
+backups/
+results/
+history/
+state.json
+runtime.json
+gotify.local.json
+.env
+*.pem

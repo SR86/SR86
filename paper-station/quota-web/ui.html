@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>论文小站</title><link rel="stylesheet" href="/style-v2.css"><script src="/app-v2.js" defer></script><script src="/management-v2.js" defer></script></head>
+<body><main>
+<header><div class="brand"><span class="logo">Q</span><div><strong>论文小站</strong><span class="brand-caption">你的阅读与工作空间</span></div></div><span class="connection" id="connection">连接中</span></header>
+<p id="summary" class="summary">正在同步…</p>
+<nav class="navigation" role="tablist" aria-label="主要功能">
+<button type="button" role="tab" id="tab-files" aria-controls="panel-files" aria-selected="false" data-panel="files">资料</button>
+<button type="button" role="tab" id="tab-reading" aria-controls="panel-reading" aria-selected="false" data-panel="reading">阅读</button>
+<button type="button" role="tab" id="tab-tasks" aria-controls="panel-tasks" aria-selected="true" data-panel="tasks">任务</button>
+<button type="button" role="tab" id="tab-command" aria-controls="panel-command" aria-selected="false" data-panel="command">指令</button>
+<button type="button" role="tab" id="tab-history" aria-controls="panel-history" aria-selected="false" data-panel="history">历史</button>
+<button type="button" role="tab" id="tab-status" aria-controls="panel-status" aria-selected="false" data-panel="status">状态</button>
+</nav><p id="notice" class="toast" role="status" aria-live="polite"></p>
+
+<section id="panel-files" role="tabpanel" aria-labelledby="tab-files" hidden>
+<div class="section-heading"><div><span class="eyebrow">资料库</span><h1>上传论文</h1></div><span class="badge">PDF · 64 MB</span></div>
+<form id="upload"><label class="file-picker">选择文件<input id="pdf" type="file" accept=".pdf,application/pdf" required></label><p class="hint">同名文件另存，不覆盖原件。</p><button id="upload-button">上传</button><p id="upload-status" class="hint" role="status" aria-live="polite"></p></form>
+<div id="paper-library" class="library"></div></section>
+
+<section id="panel-reading" role="tabpanel" aria-labelledby="tab-reading" hidden>
+<div class="section-heading"><div><span class="eyebrow">每天一点进展</span><h1>阅读计划</h1></div></div>
+<div id="reading-summary" class="metric">同步计划…</div>
+<details><summary>提醒设置</summary><form id="schedule"><label class="check"><input id="reminders" type="checkbox">开启阅读提醒</label><div class="times"><label>早上<input id="morning" type="time" required></label><label>下午<input id="afternoon" type="time" required></label><label>晚上<input id="evening" type="time" required></label></div><label>每次时长 · 分钟<input id="minutes" type="number" min="5" max="120" required></label><button>保存</button></form><button id="notify" class="secondary">测试通知</button></details>
+<div id="readings"></div></section>
+
+<section id="panel-tasks" role="tabpanel" aria-labelledby="tab-tasks">
+<div class="section-heading"><div><span class="eyebrow">进度与成果</span><h1>我的任务</h1></div><button id="new-task" class="small">＋ 新建</button></div>
+<label class="filter-label">筛选<select id="task-filter"><option value="all">全部任务</option><option value="active">未完成</option><option value="completed">已完成</option></select></label>
+<div id="tasks"></div></section>
+
+<section id="panel-command" role="tabpanel" aria-labelledby="tab-command" hidden>
+<div class="section-heading"><div><span class="eyebrow">交给 Codex</span><h1>新建指令</h1></div></div>
+<form id="automation-switch" class="switch-row"><label class="check"><input id="automation-enabled" type="checkbox">自动调度</label><button class="small secondary">保存</button></form><p id="dispatch-state" class="hint"></p>
+<form id="command"><label>想完成什么？<textarea id="command-prompt" rows="5" maxlength="10000" placeholder="例如：搭建一个简洁的个人作品展示网站。" required></textarea></label>
+<div class="form-grid"><label>任务类型<select id="command-kind"><option value="coding">网站／代码</option><option value="general">文字／方案</option><option value="paper_reading">论文阅读</option></select></label><label>执行方式<select id="command-trigger"><option value="manual">手动开始</option><option value="immediate">尽快执行</option><option value="at_time">指定时间</option><option value="after_reset">额度刷新后</option></select></label></div>
+<label id="code-target-label">代码目标<select id="code-target"><option value="new_site">新建网站</option><option value="station_copy">修改论文小站副本</option></select></label>
+<label id="command-paper-label" hidden>选择论文<select id="command-paper"></select></label>
+<label id="command-time-label" hidden>开始时间 · 北京时间<input id="command-time" type="datetime-local"></label>
+<details><summary>任务名称（可选）</summary><label>名称<input id="command-title" maxlength="150" placeholder="留空则从指令生成"></label></details>
+<button id="command-submit">保存指令</button></form>
+<details><summary>执行规则</summary><p>自动执行需打开调度开关。白天新增额度软上限 30%；00:00—07:00 的手动任务无此阈值。代码在独立目录生成，当前网站不会被覆盖。</p></details><div id="commands"></div></section>
+
+<section id="panel-history" role="tabpanel" aria-labelledby="tab-history" hidden>
+<div class="section-heading"><div><span class="eyebrow">结果存档</span><h1>历史与空间</h1></div></div><div id="storage-total" class="metric">同步存储…</div>
+<details><summary>自动清理设置</summary><form id="history-policy"><label class="check"><input id="cleanup-enabled" type="checkbox">开启自动清理</label><div class="form-grid"><label>保留天数<input id="cleanup-days" type="number" min="1" max="3650" value="30" required></label><label>容量上限 · MB<input id="cleanup-mb" type="number" min="16" max="102400" value="1024" required></label></div><p class="hint">清理超期或超容量的已完成输出；永久删除，不可恢复。论文和未完成任务保留。</p><button>保存</button></form></details>
+<button class="secondary" id="cleanup-preview">预览可清理内容</button><div id="cleanup-plan" role="status"></div><div id="history-items"></div></section>
+
+<section id="panel-status" role="tabpanel" aria-labelledby="tab-status" hidden>
+<div class="section-heading"><div><span class="eyebrow">工作站</span><h1>运行状态</h1></div><button id="refresh-now" class="small secondary">刷新</button></div><div id="quota" class="metric">同步额度…</div>
+<dl class="policy-list"><div><dt>白天 · 07:00—24:00</dt><dd>新增额度软上限 30%</dd></div><div><dt>凌晨 · 00:00—07:00</dt><dd>手动任务无 30% 阈值</dd></div><div><dt>执行时长</dt><dd>无固定时限，可手动停止</dd></div><div><dt>结果</dt><dd>分阶段保存，支持继续与修改</dd></div></dl>
+<details><summary>额度与功能说明</summary><p>额度统计和停止存在延迟，实际消耗可能超出阈值。昼夜共享账号五小时及周额度。夜间自动调度、PPT 执行尚未启用。</p></details></section>
+<footer>北京时间 · 通过 Tailscale 私有连接</footer>
+</main></body></html>
